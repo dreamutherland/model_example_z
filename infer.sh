@@ -16,7 +16,7 @@ dark_gray_blue='\033[38;5;67m'
 bronze='\033[38;5;95m'
 reset='\033[0m'
 
-echo -e "kubectl port-forward -n mlserve-$MODEL svc/$MODEL-service 5000:5000 2>&1 >/dev/null" | pbcopy
+echo -e "kubectl port-forward -n mlserve-$MODEL svc/$MODEL-api-service 5000:5000 2>&1 >/dev/null" | pbcopy
 echo -e "\n\n   ${dark_gray_blue}copied ${darker_gray_blue}kubectl port-forward [*args]${reset} ${dark_gray_blue}to clipboard if needed.${reset}  \n\n"
 
 response=$(curl -X POST -H "Content-Type:application/json" -s --data "{\"dataframe_split\": $DATA}" http://$HOST:$PORT/invocations)
