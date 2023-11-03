@@ -2,41 +2,74 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: model-example-z-deployment
+  name: model-example-z-api-deployment
   namespace: mlserve-model-example-z
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: model-example-z
+      app: model-example-z-api
   template:
     metadata:
       labels:
-        app: model-example-z
+        app: model-example-z-api
     spec:
       containers:
-      - name: model-example-z
-        image: jleighsutherland/model_example_z:v5
+      - name: model-example-z-api
+        image: jleighsutherland/model_example_z_api:v5
         ports:
         - containerPort: 5000
-        - containerPort: 7860 
+        
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-example-z-ui-deployment
+  namespace: mlserve-model-example-z
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: model-example-z-ui
+  template:
+    metadata:
+      labels:
+        app: model-example-z-ui
+    spec:
+      containers:
+      - name: model-example-z-ui
+        image: jleighsutherland/model_example_z_ui:v5
+        ports:
+        - containerPort: 7860
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: model-example-z-service
+  name: model-example-z-api-service
   namespace: mlserve-model-example-z
 spec:
   selector:
-    app: model-example-z
+    app: model-example-z-api
   ports:
     - name: api
       protocol: TCP
       port: 5000
       targetPort: 5000
+  type: NodePort  
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: model-example-z-ui-service
+  namespace: mlserve-model-example-z
+spec:
+  selector:
+    app: model-example-z-ui
+  ports:
     - name: ui
       protocol: TCP
       port: 7860
       targetPort: 7860
-  type: NodePort  # Expose the service to the outside world via a NodePort
+  type: NodePort  
